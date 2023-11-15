@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { signMessage } from "@wagmi/core";
 import { QRCodeSVG } from "qrcode.react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { useAccount, useDisconnect, useSwitchNetwork } from "wagmi";
+import { useDisconnect, useSwitchNetwork } from "wagmi";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
@@ -14,97 +13,24 @@ import {
   QrCodeIcon,
 } from "@heroicons/react/24/outline";
 import { Address, Balance, BlockieAvatar } from "~~/components/scaffold-eth";
-import { useAutoConnect, useNetworkColor } from "~~/hooks/scaffold-eth";
+import { useNetworkColor } from "~~/hooks/scaffold-eth";
+import { useAuth } from "~~/services/providers/AuthProvider";
+// import useWeb3Authentication from "~~/hooks/useWeb3Authentication";
 import { getBlockExplorerAddressLink, getTargetNetwork } from "~~/utils/scaffold-eth";
-
-function getCookie(name: string): string | null {
-  if (!document) return null;
-
-  const cookieArr = document.cookie.split(";");
-
-  for (let i = 0; i < cookieArr.length; i++) {
-    const cookiePair = cookieArr[i].trim();
-
-    if (cookiePair.startsWith(name + "=")) {
-      return decodeURIComponent(cookiePair.substring(name.length + 1));
-    }
-  }
-
-  return null;
-}
 
 /**
  * Custom Wagmi Connect Button (watch balance + custom design)
  */
-export const RainbowKitCustomConnectButton = () => {
-  useAutoConnect();
+export const Web3ConnectButton = () => {
+  // useAutoConnect();
   const networkColor = useNetworkColor();
   const configuredNetwork = getTargetNetwork();
   const { disconnect } = useDisconnect();
   const { switchNetwork } = useSwitchNetwork();
   const [addressCopied, setAddressCopied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { address, isConnected } = useAccount();
 
-  // todo: remove this hack when sign-in is gone
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setIsAuthenticated(!!getCookie("web3jwt"));
-    if (isConnected && !isAuthenticated) {
-      handleLogin();
-    } else if (!isConnected && isAuthenticated) {
-      handleLogout();
-    }
-  }, [isConnected, isAuthenticated, address]);
-
-  const handleLogin = async () => {
-    setIsLoading(true);
-    try {
-      const nonceResponse = await fetch(`/api/web3auth/nonce`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address }),
-      });
-      const {
-        user: [user],
-      } = await nonceResponse.json();
-      const message = process.env.NEXT_PUBLIC_WEB3AUTH_MESSAGE + user.auth.genNonce;
-      try {
-        const signedMessage = await signMessage({ message });
-
-        const response = await fetch(`/api/web3auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ address, signedMessage, nonce: user.auth.genNonce }),
-        });
-
-        setIsAuthenticated(response?.ok);
-      } catch (err) {
-        disconnect();
-      }
-    } catch (err) {
-      console.error("An error occurred:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`/api/web3auth/logout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      setIsAuthenticated(!response?.ok);
-    } catch (err) {
-      console.error("An error occurred:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const { isLoading } = useWeb3Authentication();
+  const { isLoading } = useAuth();
 
   return (
     <ConnectButton.Custom>
