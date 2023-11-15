@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { isAddress } from "viem";
 
 // Define a type for the successful response
 type SuccessfulResponse = {
+  address: string;
   amount: number;
 };
 
@@ -24,7 +26,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
+  // Check wallet address validity using viem
+  if (!isAddress(walletAddress)) {
+    res.status(400).json({ error: "Invalid wallet address" });
+    return;
+  }
+
   // Generate a random mint amount and return it
   const randomMintAmount = getRandomInteger(1, 1000);
-  res.status(200).json({ amount: randomMintAmount });
+  res.status(200).json({ address: walletAddress, amount: randomMintAmount });
 }
