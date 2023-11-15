@@ -1,19 +1,16 @@
 import { NextResponse } from "next/server";
-import { authClient, client } from "~~/services/twitter/client";
-
-const STATE = "my-state";
+import { getClient, handleAuthCode } from "~~/services/twitter/client";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const code = searchParams.get("code");
-    const state = searchParams.get("state");
-    console.log({ code, state });
 
-    if (state !== STATE) return NextResponse.json({ error: "State isn't matching" }, { status: 500 });
-    const { token } = await authClient.requestAccessToken(code as string);
-    console.log({ token });
+    await handleAuthCode(code as string);
+    console.log("successss");
 
+    // await authClient.requestAccessToken(code as string);
+    const client = await getClient();
     const tweets = await client.users.findMyUser({
       "user.fields": [
         "created_at",
@@ -32,7 +29,7 @@ export async function GET(req: Request) {
       ],
     });
     console.log({ tweets });
-    NextResponse.json(tweets.data);
+    return NextResponse.json(tweets);
   } catch (error) {
     console.log(error);
     NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

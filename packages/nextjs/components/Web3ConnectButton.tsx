@@ -15,7 +15,6 @@ import {
 import { Address, Balance, BlockieAvatar } from "~~/components/scaffold-eth";
 import { useNetworkColor } from "~~/hooks/scaffold-eth";
 import { useAuth } from "~~/services/providers/AuthProvider";
-// import useWeb3Authentication from "~~/hooks/useWeb3Authentication";
 import { getBlockExplorerAddressLink, getTargetNetwork } from "~~/utils/scaffold-eth";
 
 /**
