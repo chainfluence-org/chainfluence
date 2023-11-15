@@ -3,7 +3,13 @@ import { signMessage } from "@wagmi/core";
 import { useAccount, useDisconnect } from "wagmi";
 import { useAutoConnect } from "~~/hooks/scaffold-eth";
 
-const AuthContext = createContext({ isLoading: false, isAuthenticated: false });
+const AuthContext = createContext({
+  isLoading: false,
+  isAuthenticated: false,
+  logout: () => {
+    //
+  },
+});
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -11,23 +17,17 @@ export function useAuth() {
 
 export function AuthProvider({ children }: any) {
   useAutoConnect();
-  const { address, isConnected, isDisconnected } = useAccount();
+
+  const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("isDisconnected", isDisconnected);
-    console.log("isConnected", isConnected);
-    console.log("isAuthenticated", isAuthenticated);
-    console.log("address", address);
-    console.log('getCookie("web3jwt")', getCookie("web3jwt"));
-
     setIsAuthenticated(!!getCookie("web3jwt"));
+
     if (isConnected && !isAuthenticated) {
       handleLogin();
-    } else if (isDisconnected) {
-      handleLogout();
     }
   }, [isConnected, isAuthenticated, address]);
 
@@ -63,8 +63,9 @@ export function AuthProvider({ children }: any) {
     }
   };
 
-  const handleLogout = async () => {
+  const logout = async () => {
     setIsLoading(true);
+
     try {
       const response = await fetch(`/api/auth/web3/logout`, {
         method: "POST",
@@ -75,6 +76,7 @@ export function AuthProvider({ children }: any) {
     } catch (err) {
       console.error("An error occurred:", err);
     } finally {
+      disconnect();
       setIsLoading(false);
     }
   };
@@ -82,6 +84,7 @@ export function AuthProvider({ children }: any) {
   const value = {
     isAuthenticated,
     isLoading,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

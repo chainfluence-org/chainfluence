@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { QRCodeSVG } from "qrcode.react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { useDisconnect, useSwitchNetwork } from "wagmi";
+import { useSwitchNetwork } from "wagmi";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
@@ -25,12 +25,10 @@ export const Web3ConnectButton = () => {
   // useAutoConnect();
   const networkColor = useNetworkColor();
   const configuredNetwork = getTargetNetwork();
-  const { disconnect } = useDisconnect();
   const { switchNetwork } = useSwitchNetwork();
   const [addressCopied, setAddressCopied] = useState(false);
 
-  // const { isLoading } = useWeb3Authentication();
-  const { isLoading } = useAuth();
+  const { isLoading, logout } = useAuth();
 
   return (
     <ConnectButton.Custom>
@@ -83,7 +81,7 @@ export const Web3ConnectButton = () => {
                         <button
                           className="menu-item text-error btn-sm !rounded-xl flex gap-3 py-3"
                           type="button"
-                          onClick={() => disconnect()}
+                          onClick={logout}
                         >
                           <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Disconnect</span>
                         </button>
@@ -176,7 +174,7 @@ export const Web3ConnectButton = () => {
                         <button
                           className="menu-item text-error btn-sm !rounded-xl flex gap-3 py-3"
                           type="button"
-                          onClick={() => disconnect()}
+                          onClick={logout}
                         >
                           <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Disconnect</span>
                         </button>
