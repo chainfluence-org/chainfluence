@@ -81,9 +81,11 @@ export async function POST(req: Request) {
       // 6. We sign the token and return it to client
       const token = await signToken(
         {
+          userId: finalAuthUser?.id,
           address: address,
           sub: user.id,
           aud: "authenticated",
+          ttl,
         },
         { expiresIn: `${ttl}s` },
       );

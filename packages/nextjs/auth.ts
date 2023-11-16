@@ -22,7 +22,6 @@ export const auth = async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log("user: ", user);
 
     if (user) {
       return user;

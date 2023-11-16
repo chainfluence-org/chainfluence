@@ -1,49 +1,40 @@
 // tokens.ts
 import { randomBytes } from "crypto";
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+// import path from "path";
 import Client, { auth } from "twitter-api-sdk";
+import { getServiceRoleServerSupabaseClient } from "~~/services/supabase/client";
 
-// import { getClientSupabaseClient } from "~~/services/supabase/client";
-
-// const supabase = getClientSupabaseClient();
-export interface PlatformTokens {
+const supabase = getServiceRoleServerSupabaseClient();
+export interface UserAuthTokens {
   token?: string;
   state?: string;
   challenge?: string;
 }
 
-let user: auth.OAuth2User | null = null;
-
-const getUser = async () => {
-  if (!user) {
-    const { token } = (await getPlatformTokens()) ?? {};
-    user = new auth.OAuth2User({
-      client_id: process.env.X_CLIENT_ID as string,
-      client_secret: process.env.X_CLIENT_SECRET as string,
-      callback: "http://localhost:3000/api/auth/twitter/callback",
-      scopes: ["tweet.read", "users.read", "follows.read"],
-      token: token ? JSON.parse(token) : undefined,
-    });
-  }
-  return user;
+export const getUser = async (userId: string) => {
+  const { token } = (await getUserAuthTokens(userId)) ?? {};
+  return new auth.OAuth2User({
+    client_id: process.env.X_CLIENT_ID as string,
+    client_secret: process.env.X_CLIENT_SECRET as string,
+    callback: process.env.X_CALLBACK_URL as string,
+    scopes: ["tweet.read", "users.read", "follows.read"],
+    token: token ? JSON.parse(token) : undefined,
+  });
 };
 
-let client: Client | null = null;
-
-export const getClient = async () => {
-  if (!client) client = new Client(await getUser());
-  return client;
+export const getTwitterUserClient = async (userId: string) => {
+  return new Client(await getUser(userId));
 };
 
-export const generateAuthURL = async () => {
+export const generateAuthURL = async (userId: string) => {
   const state = randomBytes(12).toString("hex");
   const challenge = randomBytes(12).toString("hex");
-  await updatePlatformTokens({
+  await updateUserAuthTokens(userId, {
     state,
     challenge,
   });
-  const user = await getUser();
+  const user = await getUser(userId);
   return user.generateAuthURL({
     state,
     code_challenge_method: "plain",
@@ -51,9 +42,9 @@ export const generateAuthURL = async () => {
   });
 };
 
-export const handleAuthCode = async (code: string) => {
-  const user = await getUser();
-  const { state, challenge } = (await getPlatformTokens()) ?? {};
+export const handleAuthCode = async (userId: string, code: string) => {
+  const user = await getUser(userId);
+  const { state, challenge } = (await getUserAuthTokens(userId)) ?? {};
   if (state && challenge) {
     user.generateAuthURL({
       state,
@@ -61,7 +52,7 @@ export const handleAuthCode = async (code: string) => {
       code_challenge: challenge,
     });
     const { token } = await user.requestAccessToken(code);
-    await updatePlatformTokens({
+    await updateUserAuthTokens(userId, {
       token: JSON.stringify(token),
     });
   }
@@ -69,52 +60,21 @@ export const handleAuthCode = async (code: string) => {
 
 // Import your Supabase client
 
-// export const getPlatformTokens = async () => {
-//   const { data, error } = await supabase.from("platform").select("*").eq("id", "tokens").single();
+export const getUserAuthTokens = async (userId: string) => {
+  const { data, error } = await supabase.from("user_auth_tokens").select("*").eq("id", userId).single();
 
-//   if (error) {
-//     console.error(error);
-//     return null;
-//   }
-
-//   return data as PlatformTokens;
-// };
-
-// export const updatePlatformTokens = async (tokens: Partial<PlatformTokens>) => {
-//   const { error } = await supabase.from("platform").upsert({ id: "tokens", ...tokens });
-
-//   if (error) {
-//     console.error(error);
-//   }
-// };
-
-const tokensFilePath = path.resolve("tokens.json");
-
-export const getPlatformTokens = async (): Promise<PlatformTokens | null> => {
-  try {
-    const data = fs.readFileSync(tokensFilePath, "utf8");
-    return JSON.parse(data) as PlatformTokens;
-  } catch (error) {
+  if (error) {
     console.error(error);
     return null;
   }
+
+  return data as UserAuthTokens;
 };
 
-export const updatePlatformTokens = async (tokens: Partial<PlatformTokens>) => {
-  try {
-    const existingTokens = await getPlatformTokens();
-    const updatedTokens = { ...existingTokens, ...tokens };
-    fs.writeFileSync(tokensFilePath, JSON.stringify(updatedTokens, null, 2));
-  } catch (error) {
+export const updateUserAuthTokens = async (userId: string, tokens: Partial<UserAuthTokens>) => {
+  const { error } = await supabase.from("user_auth_tokens").upsert({ id: userId, ...tokens });
+
+  if (error) {
     console.error(error);
   }
 };
-
-// export const authClient = new auth.OAuth2User({
-//   client_id: process.env.X_CLIENT_ID as string,
-//   client_secret: process.env.X_CLIENT_SECRET as string,
-//   callback: "http://localhost:3000/api/auth/twitter/callback",
-//   scopes: ["tweet.read", "users.read", "follows.read"],
-// });
-
-// export const client = new Client(authClient);

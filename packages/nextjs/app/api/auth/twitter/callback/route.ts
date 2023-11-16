@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server";
-import { getClient, handleAuthCode } from "~~/services/twitter/client";
+import { auth } from "~~/auth";
+import { getServiceRoleServerSupabaseClient } from "~~/services/supabase/client";
+import { getTwitterUserClient, handleAuthCode } from "~~/services/twitter/client";
 
 export async function GET(req: Request) {
+  const userId = (await auth())?.id;
+
+  if (!userId) return new Response("Unauthorized", { status: 401 });
+
   try {
     const { searchParams } = new URL(req.url);
-    const code = searchParams.get("code");
+    const code = searchParams.get("code") as string;
 
-    await handleAuthCode(code as string);
-    console.log("successss");
+    await handleAuthCode(userId, code);
 
     // await authClient.requestAccessToken(code as string);
-    const client = await getClient();
-    const tweets = await client.users.findMyUser({
+    const client = await getTwitterUserClient(userId);
+    const { data: user } = await client.users.findMyUser({
       "user.fields": [
         "created_at",
         "description",
@@ -28,8 +33,11 @@ export async function GET(req: Request) {
         "verified",
       ],
     });
-    console.log({ tweets });
-    return NextResponse.json(tweets);
+
+    const supabase = getServiceRoleServerSupabaseClient();
+    await supabase.from("users").update({ twitter: user?.username }).eq("id", userId);
+
+    return NextResponse.json(user?.username);
   } catch (error) {
     console.log(error);
     NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
