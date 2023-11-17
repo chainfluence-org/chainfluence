@@ -1,3 +1,5 @@
+"use server";
+
 import { cookies } from "next/headers";
 import { createClientComponentClient, createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { createClient } from "@supabase/supabase-js";
@@ -14,6 +16,7 @@ export const getServiceRoleServerSupabaseClient = () =>
 // Supabase authorized client for use in server-side code
 export const getServerSupabaseClient = () => {
   const token = cookies().get("web3jwt");
+
   if (!token) {
     return createRouteHandlerClient<Database>({ cookies });
   } else {

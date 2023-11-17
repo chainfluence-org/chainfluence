@@ -42,3 +42,19 @@ export function jsonResponse(status: number, data: any, init?: ResponseInit) {
     },
   });
 }
+
+export function getCookie(name: string): string | null {
+  if (!document) return null;
+
+  const cookieArr = document.cookie.split(";");
+
+  for (let i = 0; i < cookieArr.length; i++) {
+    const cookiePair = cookieArr[i].trim();
+
+    if (cookiePair.startsWith(name + "=")) {
+      return decodeURIComponent(cookiePair.substring(name.length + 1));
+    }
+  }
+
+  return null;
+}

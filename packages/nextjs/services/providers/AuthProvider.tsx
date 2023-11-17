@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { getClientSupabaseClient } from "../supabase/clientClient";
 import { signMessage } from "@wagmi/core";
 import { useAccount, useDisconnect } from "wagmi";
 import { useAutoConnect } from "~~/hooks/scaffold-eth";
@@ -9,6 +10,7 @@ const AuthContext = createContext({
   logout: () => {
     //
   },
+  user: null,
 });
 
 export function useAuth() {
@@ -22,10 +24,37 @@ export function AuthProvider({ children }: any) {
   const { disconnect } = useDisconnect();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const supabase = getClientSupabaseClient();
+
+  const fetchUser = async () => {
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+
+    const isAuthenticated = !!authUser;
+
+    setIsAuthenticated(isAuthenticated);
+
+    if (isAuthenticated) {
+      const { data: _user, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("address", authUser?.user_metadata.address)
+        .single();
+
+      if (!error) return setUser(_user);
+      console.log({ error });
+    } else {
+      setUser(null);
+    }
+  };
 
   useEffect(() => {
-    setIsAuthenticated(!!getCookie("web3jwt"));
+    fetchUser();
+  }, [isAuthenticated, address]);
 
+  useEffect(() => {
     if (isConnected && !isAuthenticated) {
       handleLogin();
     }
@@ -85,23 +114,8 @@ export function AuthProvider({ children }: any) {
     isAuthenticated,
     isLoading,
     logout,
+    user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-function getCookie(name: string): string | null {
-  if (!document) return null;
-
-  const cookieArr = document.cookie.split(";");
-
-  for (let i = 0; i < cookieArr.length; i++) {
-    const cookiePair = cookieArr[i].trim();
-
-    if (cookiePair.startsWith(name + "=")) {
-      return decodeURIComponent(cookiePair.substring(name.length + 1));
-    }
-  }
-
-  return null;
 }

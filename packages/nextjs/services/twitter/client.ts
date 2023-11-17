@@ -3,7 +3,7 @@ import { randomBytes } from "crypto";
 // import fs from "fs";
 // import path from "path";
 import Client, { auth } from "twitter-api-sdk";
-import { getServiceRoleServerSupabaseClient } from "~~/services/supabase/client";
+import { getServiceRoleServerSupabaseClient } from "~~/services/supabase/serverClient";
 
 const supabase = getServiceRoleServerSupabaseClient();
 export interface UserAuthTokens {

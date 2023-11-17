@@ -7,6 +7,7 @@ export const auth = async () => {
   const web3jwt = cookies().get("web3jwt")?.value || "";
 
   const validToken = await verifyToken(web3jwt, address);
+
   if (web3jwt && validToken) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
