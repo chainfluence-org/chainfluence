@@ -21,6 +21,7 @@
     "@uniswap/v2-sdk": "^3.0.1",
     "blo": "^1.0.1",
     "cookie": "^0.6.0",
+    "cors": "^2.8.5",
     "daisyui": "^3.5.1",
     "ethers": "^6.8.1",
     "i": "^0.3.7",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/cors": "^2",
     "@types/cookie": "^0",
     "@types/js-cookie": "^3",
     "@types/jsonwebtoken": "^9",

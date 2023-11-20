@@ -1,39 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifyToken } from "~~/utils";
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export function middleware(request: NextRequest) {
+  // Create a response object
+  const response = NextResponse.next();
 
-  const address = req.cookies.get("address")?.value || "";
-  const web3jwt = req.cookies.get("web3jwt")?.value || "";
-  const validToken = verifyToken(web3jwt, address);
+  // Set CORS headers
+  response.headers.set("Access-Control-Allow-Origin", "*"); // Adjust as necessary
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Accept");
 
-  console.log({ address, web3jwt, validToken });
-
-  // would be good to maybe verify web3jwt here, but error w/ edge functions
-  if (!web3jwt || !validToken) {
-    // if (!req.url.includes("/sign-in")) {
-    //   const redirectUrl = req.nextUrl.clone();
-    //   redirectUrl.pathname = "/sign-in";
-    //   redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname);
-    //   return NextResponse.redirect(redirectUrl);
-    // }
+  // Handle OPTIONS method for CORS preflight requests
+  if (request.method === "OPTIONS") {
+    return new NextResponse(null, { status: 204, headers: response.headers });
   }
-
-  return res;
+  console.log("middleware");
+  // Continue with the response for non-OPTIONS requests
+  return response;
 }
 
+// Apply the middleware to all paths
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - share (publicly shared chats)
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!share|api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: "/api/mint/:walletAddress*",
 };
