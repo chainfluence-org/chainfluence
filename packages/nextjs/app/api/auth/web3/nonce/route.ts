@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "~~/auth";
-import { getServiceRoleServerSupabaseClient } from "~~/services/supabase/client";
+import { getServiceRoleServerSupabaseClient } from "~~/services/supabase/serverClient";
 
 export async function POST(req: Request) {
   const srSupabase = getServiceRoleServerSupabaseClient();
