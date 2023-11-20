@@ -48,7 +48,7 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
                   SECRET_NAME: chainfluence-${{ github.ref_name }}--secrets
-                  OUTPUT_PATH: .env
+                  OUTPUT_PATH: ./packages/nextjs/.env
             
 
             - name: Build, tag, and push image to Amazon ECR
