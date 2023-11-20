@@ -6,7 +6,7 @@ function TwitterConnectButton() {
 
   const handleLogin = async () => {
     try {
-      window.open("/api/auth/twitter/login", "_blank");
+      if (!user?.twitter) window.open("/api/auth/twitter/login", "_blank");
     } catch (error) {
       console.error("Failed to connect with X:", error);
     }
