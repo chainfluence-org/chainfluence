@@ -122,6 +122,11 @@ const config: HardhatUserConfig = {
       url: "https://rpc.scroll.io",
       accounts: [deployerPrivateKey],
     },
+    localFunctionsTestnet: {
+      url: "http://localhost:8545/",
+      accounts: [deployerPrivateKey],
+      chainId: 1337,
+    }
   },
   verify: {
     etherscan: {
