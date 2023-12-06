@@ -1,0 +1,38 @@
+FRONTEND
+-Get database update realtime
+-Improve auth flow so that instead of opening the sign verification, it opens a modal that has Web3 sign in button (opens verification) and then has a connect with Twitter button that is only enabled if web3 wallet signed in.
+-Add env to env.example and to terraform so tommy can try
+-Remove all any, add types from Database
+
+
+
+
+BACKEND:
+
+-User
+-UserProfile
+
+-Projects
+-ProjectProfile
+
+
+// https://docs.chain.link/chainlink-functions/resources/service-limits
+
+STAGE 2 (With 0 backend dependancy):
+
+-Chainlink Automation runs and stores tweetIds on chain
+-Chainlink Function only calls Twitter API and calculates the mint
+
+
+
+
+MINT CALCULATION (Needs to ran weekly because twitter api is weekly)
+
+Functions need to all return the same value, what happens if someone likes/retweets something while we mint?
+How do we register referrals on-chain?
+
+1) Create a referral tree
+2) Code an algorithm that given a referal tree, outputs an array of array that represents the steps on that can go in parallel (first array should be all the leaves) in the order we should mint linearly
+
+
+

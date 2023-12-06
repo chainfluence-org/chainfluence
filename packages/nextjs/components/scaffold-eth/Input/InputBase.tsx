@@ -1,3 +1,5 @@
+"use client";
+
 import { ChangeEvent, ReactNode, useCallback } from "react";
 import { CommonInputProps } from "~~/components/scaffold-eth";
 

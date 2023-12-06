@@ -22,10 +22,7 @@ export async function POST(req: Request) {
     // 2. Select * from public.user table to get nonce
     const { data: user, error: userError } = await srSupabase.from("users").select("*").eq("address", address).single();
 
-    console.log("1");
-
     if (user && !userError) {
-      console.log("2");
       // 3. Verify the nonce included in the request matches what's already in public.users table for that address
       if (user?.auth.genNonce !== nonce) {
         return NextResponse.json({ error: "Nonce verification failed" }, { status: 401 });
@@ -39,10 +36,7 @@ export async function POST(req: Request) {
         .eq("raw_user_meta_data->>address", address)
         .single();
 
-      console.log("finalAuthUser", finalAuthUser);
-
       if (!authUser || authUserError) {
-        console.log("3");
         // 4. If there's no auth.users.id for that address
         const { data: newUser, error: newUserError } = await srSupabase.auth.admin.createUser({
           email: address + process.env.NEXT_PUBLIC_APP_DOMAN,
@@ -61,7 +55,6 @@ export async function POST(req: Request) {
         finalAuthUser = authUser;
       }
 
-      console.log("4");
       // 5. Update public.users.id with auth.users.id
       await srSupabase
         .from("users")
@@ -77,8 +70,6 @@ export async function POST(req: Request) {
         ])
         .eq("address", address)
         .select();
-
-      console.log("5");
 
       // 1 day
       const ttl = 86400;
@@ -97,8 +88,6 @@ export async function POST(req: Request) {
         },
         { expiresIn: `${ttl}s` },
       );
-
-      console.log(token);
 
       const response = NextResponse.json("success", { status: 200 });
       response.cookies.set("address", address);

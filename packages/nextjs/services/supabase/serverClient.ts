@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { createClientComponentClient, createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "~~/types/database";
 
@@ -34,19 +34,19 @@ export const getServerSupabaseClient = () => {
   }
 };
 
-// Supabase authorized client for use in client-side code
-export const getClientSupabaseClient = () => {
-  const token = cookies().get("web3jwt");
+// // Supabase authorized client for use in client-side code
+// export const getClientSupabaseClient = () => {
+//   const token = cookies().get("web3jwt");
 
-  if (!token) {
-    return createClientComponentClient();
-  } else {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-    const headers = {
-      global: { headers: { Authorization: `Bearer ${token}` } },
-      auth: { persistSession: false },
-    };
-    return createClient(url, anonKey, headers);
-  }
-};
+//   if (!token) {
+//     return createClientComponentClient();
+//   } else {
+//     const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+//     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+//     const headers = {
+//       global: { headers: { Authorization: `Bearer ${token}` } },
+//       auth: { persistSession: false },
+//     };
+//     return createClient(url, anonKey, headers);
+//   }
+// };

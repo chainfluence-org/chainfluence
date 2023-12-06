@@ -1953,11 +1953,13 @@ __metadata:
     "@rainbow-me/rainbowkit": 1.1.2
     "@supabase/auth-helpers-nextjs": ^0.8.7
     "@supabase/supabase-js": ^2.38.4
+    "@tailwindcss/forms": ^0.5.7
     "@trivago/prettier-plugin-sort-imports": ^4.1.1
     "@types/cookie": ^0
     "@types/cors": ^2
     "@types/js-cookie": ^3
     "@types/jsonwebtoken": ^9
+    "@types/lokijs": ^1
     "@types/node": ^17.0.35
     "@types/react": ^18.0.9
     "@types/react-copy-to-clipboard": ^5.0.4
@@ -2442,6 +2444,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tailwindcss/forms@npm:^0.5.7":
+  version: 0.5.7
+  resolution: "@tailwindcss/forms@npm:0.5.7"
+  dependencies:
+    mini-svg-data-uri: ^1.2.3
+  peerDependencies:
+    tailwindcss: ">=3.0.0 || >= 3.0.0-alpha.1"
+  checksum: 406fe102a44f89d896c9a945b705a40b926520472ffd8613d9fbfb9e63c23d600629f54096b8ba78316ce1278b79ae6070c166b820328256cf359e80f9d2146f
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:4.36.1":
   version: 4.36.1
   resolution: "@tanstack/query-core@npm:4.36.1"
@@ -2734,6 +2747,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 07ab6fee602e5bd3fb5c6dfe4ec400769dc20f1d7fce901feecb4c3af5f5f08323b03ea55de3e49b1aa41e171a59008f6f4318738a735588c5268a63eba25337
+  languageName: node
+  linkType: hard
+
+"@types/lokijs@npm:^1":
+  version: 1.5.14
+  resolution: "@types/lokijs@npm:1.5.14"
+  checksum: e5601952d19f5d6ace6e2b5d06771de0b4319bcb211f30f094c954e445b335a42e6e2de73561b837868f0b25a18e17333f1e7ff84b5523c0ef324c4650a549d6
   languageName: node
   linkType: hard
 
@@ -9436,6 +9456,15 @@ __metadata:
   version: 4.0.0
   resolution: "mimic-fn@npm:4.0.0"
   checksum: 995dcece15ee29aa16e188de6633d43a3db4611bcf93620e7e62109ec41c79c0f34277165b8ce5e361205049766e371851264c21ac64ca35499acb5421c2ba56
+  languageName: node
+  linkType: hard
+
+"mini-svg-data-uri@npm:^1.2.3":
+  version: 1.4.4
+  resolution: "mini-svg-data-uri@npm:1.4.4"
+  bin:
+    mini-svg-data-uri: cli.js
+  checksum: 997f1fbd8d59a70f03761e18626d335197a3479cb9d1ff75678e4b64b864d32a0b8fc18115eabde035e5299b8b4a354a78e57dd6ac10f9d604162a6170898d09
   languageName: node
   linkType: hard
 

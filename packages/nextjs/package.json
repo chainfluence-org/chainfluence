@@ -9,7 +9,8 @@
     "serve": "next start",
     "lint": "next lint",
     "format": "prettier --write . '!(node_modules|.next|contracts)/**/*'",
-    "check-types": "tsc --noEmit --incremental"
+    "check-types": "tsc --noEmit --incremental",
+    "supabase-gen": "npx supabase gen types typescript --project-id 'zviwizcqiutnjlgylwrl' --schema public > types/supabase.ts"
   },
   "dependencies": {
     "@ethersproject/providers": "^5.7.2",
@@ -17,6 +18,7 @@
     "@rainbow-me/rainbowkit": "1.1.2",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
     "@supabase/supabase-js": "^2.38.4",
+    "@tailwindcss/forms": "^0.5.7",
     "@uniswap/sdk-core": "^4.0.1",
     "@uniswap/v2-sdk": "^3.0.1",
     "blo": "^1.0.1",
@@ -49,6 +51,7 @@
     "@types/cors": "^2",
     "@types/js-cookie": "^3",
     "@types/jsonwebtoken": "^9",
+    "@types/lokijs": "^1",
     "@types/node": "^17.0.35",
     "@types/react": "^18.0.9",
     "@types/react-copy-to-clipboard": "^5.0.4",

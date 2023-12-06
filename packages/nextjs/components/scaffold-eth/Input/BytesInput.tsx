@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback } from "react";
 import { bytesToString, isHex, toBytes, toHex } from "viem";
 import { CommonInputProps, InputBase } from "~~/components/scaffold-eth";
