@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { createClient } from "@supabase/supabase-js";
-import { Database } from "~~/types/database";
+import { Database } from "~~/types/supabase";
 
 // Supabase admin/service_role client for use in server-side code
 export const getServiceRoleServerSupabaseClient = () =>

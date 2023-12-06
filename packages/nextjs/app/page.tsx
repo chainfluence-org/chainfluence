@@ -16,7 +16,7 @@ export default function Page() {
           CREATE
         </button>
       </Link>
-      <Link href="/explore">
+      <Link href="/projects/explore">
         <button style={{ backgroundColor: "#0070f3", padding: "10px", width: "100px" }}>EXPLORE</button>
       </Link>
     </div>

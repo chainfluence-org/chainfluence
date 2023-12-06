@@ -21,5 +21,9 @@ export async function getProjectByContractAddress(contractAddress: string) {
 export async function getProjects() {
   const { data } = await supabase.from("projects").select("*");
 
+  if (!data) {
+    return [];
+  }
+
   return data;
 }
