@@ -8,7 +8,7 @@ export type ScaffoldConfig = {
   onlyLocalBurnerWallet: boolean;
   walletAutoConnect: boolean;
 };
-console.log("chains.localhost", chains.localhost);
+
 const scaffoldConfig = {
   // The network where your DApp lives in
   targetNetwork: chains.sepolia,
