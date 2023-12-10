@@ -4,10 +4,13 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import RegisterButton from "./RegisterButton";
 import TwitterConnectButton from "./TwitterConnectButton";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, Web3ConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import { useIsUserRegistered } from "~~/hooks/scaffold-eth/useIsUserRegistered";
+import { useAuth } from "~~/services/providers/AuthProvider";
 
 interface HeaderMenuLink {
   label: string;
@@ -29,7 +32,6 @@ export const menuLinks: HeaderMenuLink[] = [
 
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
-
   return (
     <>
       {menuLinks.map(({ label, href, icon }) => {
@@ -58,6 +60,9 @@ export const HeaderMenuLinks = () => {
  */
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { user } = useAuth();
+  const { data: isUserRegistered } = useIsUserRegistered(user?.twitter);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(
     burgerMenuRef,
@@ -102,7 +107,8 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end flex-grow mr-4">
+      <div className="navbar-end flex-grow mr-4 gap-2">
+        {user?.twitter && !isUserRegistered && <RegisterButton />}
         <TwitterConnectButton />
         <Web3ConnectButton />
         <FaucetButton />

@@ -11,7 +11,15 @@ export type ScaffoldConfig = {
 
 const scaffoldConfig = {
   // The network where your DApp lives in
-  targetNetwork: chains.sepolia,
+  // targetNetwork: chains.localhost,
+  targetNetwork: {
+    ...chains.localhost,
+    rpcUrls: {
+      ...chains.localhost.rpcUrls,
+      default: { http: ["http://localhost:8545"] },
+      public: { http: ["http://localhost:8545"] },
+    },
+  },
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect on the local network
