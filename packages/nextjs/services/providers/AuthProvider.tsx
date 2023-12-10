@@ -10,7 +10,7 @@ const AuthContext = createContext({
   logout: () => {
     //
   },
-  user: { twitter: null },
+  user: { twitter: null, twitter_profile_image_url: null },
 });
 
 export function useAuth() {

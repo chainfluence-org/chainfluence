@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function ProjectPage(project: any) {
+export default function ProjectPage(params: any) {
   const {
     name,
     website,
@@ -11,7 +11,8 @@ export default function ProjectPage(project: any) {
     token_supply,
     token_balance,
     token_decimals,
-  } = project;
+    isOwner,
+  } = params;
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
@@ -58,14 +59,29 @@ export default function ProjectPage(project: any) {
           </dl>
         </div>
         <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 pt-4 sm:px-8">
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <Link href={`/projects/${token_contract_address}/campaign/create`}>Create Campaign</Link>
-          </button>
+          {isOwner ? (
+            <Link href={`/projects/${token_contract_address}/campaign/create`}>
+              <button
+                type="button"
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Create Campaign
+              </button>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Register
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+//todo: need to have its smart contract for campaign
+//todo: show campaign calculation status, when it ran last, if it is running or not
+//todo: show table with campaign result

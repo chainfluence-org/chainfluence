@@ -35,9 +35,12 @@ export async function GET(req: Request) {
     });
 
     const supabase = getServiceRoleServerSupabaseClient();
-    await supabase.from("users").update({ twitter: user?.username }).eq("id", userId);
+    await supabase
+      .from("users")
+      .update({ twitter: user?.username, twitter_profile_image_url: user?.profile_image_url })
+      .eq("id", userId);
 
-    return NextResponse.json(user?.username);
+    return NextResponse.json({ user });
   } catch (error) {
     console.log(error);
     NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

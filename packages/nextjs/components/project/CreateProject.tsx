@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import TwitterConnectButton from "../TwitterConnectButton";
 import { createPublicClient, formatUnits, http, isAddress } from "viem";
 import { sepolia } from "wagmi";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { erc20Abi } from "~~/contracts/abi";
+import { useAuth } from "~~/services/providers/AuthProvider";
 
 const client = createPublicClient({
   chain: sepolia,
@@ -14,6 +15,8 @@ const client = createPublicClient({
 });
 
 export default function CreateProject() {
+  const { user } = useAuth();
+
   const [tokenAddress, setTokenAddress] = useState("");
   const [tokenInfo, setTokenInfo] = useState({
     name: "",
@@ -39,7 +42,8 @@ export default function CreateProject() {
         name,
         website,
         description,
-        logo_url: "",
+        twitter: user?.twitter,
+        twitter_image_url: user?.twitter_profile_image_url,
         token_contract_address: tokenAddress,
         token_name: tokenInfo.name,
         token_symbol: tokenInfo.symbol,
@@ -54,6 +58,8 @@ export default function CreateProject() {
     }
 
     const data = await response.json();
+
+    console.log({ data });
 
     if (data.success) {
       redirect(`/projects/${tokenAddress}`);
@@ -242,18 +248,20 @@ export default function CreateProject() {
               </div>
               <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about your project.</p>
             </div>
+
             <div className="col-span-full">
-              <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
-                Photo
+              <label htmlFor="twitter" className="block text-sm font-medium leading-6 text-gray-900">
+                Social media
               </label>
               <div className="mt-2 flex items-center gap-x-3">
-                <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
-                <button
-                  type="button"
-                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  Change
-                </button>
+                {user?.twitter_profile_image_url ? (
+                  <img
+                    src={user?.twitter_profile_image_url}
+                    alt="User"
+                    className="h-12 w-12 text-gray-300 rounded-full"
+                  />
+                ) : null}
+                <TwitterConnectButton />
               </div>
             </div>
           </div>
