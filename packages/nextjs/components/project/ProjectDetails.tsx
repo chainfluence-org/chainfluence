@@ -1,6 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import RegisterButton from "../RegisterButton";
+import { useIsUserRegistered } from "~~/hooks/scaffold-eth/useIsUserRegistered";
+import { useAuth } from "~~/services/providers/AuthProvider";
 
 export default function ProjectPage(params: any) {
+  const { user } = useAuth();
+  const { data: isUserRegistered } = useIsUserRegistered(user?.twitter);
   const {
     name,
     website,
@@ -68,13 +75,10 @@ export default function ProjectPage(params: any) {
                 Create Campaign
               </button>
             </Link>
+          ) : !isUserRegistered ? (
+            <RegisterButton />
           ) : (
-            <button
-              type="button"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Register
-            </button>
+            <span className="text-sm font-medium leading-6 text-gray-900">You already registered to this project.</span>
           )}
         </div>
       </div>

@@ -17,7 +17,7 @@ const types = {
 
 function RegisterButton() {
   const { user } = useAuth();
-  const { data: deployedContractData } = useDeployedContractInfo("ChainfluenceCampaignManager");
+  const { data: deployedContractData } = useDeployedContractInfo("TokenCampaignManager");
   const domain = useDomainData(deployedContractData); // Custom hook
 
   const [registrationState, setRegistrationState] = useState<{
@@ -52,11 +52,11 @@ function RegisterButton() {
   });
 
   useEffect(() => {
-    if (user.twitter && !registrationState.isRegistering && registrationState.signature && !isSuccessRegister) {
+    if (user?.twitter && !registrationState.isRegistering && registrationState.signature && !isSuccessRegister) {
       setRegistrationState({ ...registrationState, isRegistering: true });
       write({ args: [{ twitterHandle: user?.twitter, nonce: BigInt(1) }, registrationState.signature] });
     }
-  }, [isSuccessRegister, registrationState, user.twitter, write]);
+  }, [isSuccessRegister, registrationState, user?.twitter, write]);
 
   const handleRegister = () => {
     if (!user?.twitter) {
@@ -67,7 +67,7 @@ function RegisterButton() {
   };
   return (
     <button
-      className="btn btn-error btn-sm dropdown-toggle gap-1"
+      className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       onClick={handleRegister}
       disabled={registrationState.isRegistering}
     >

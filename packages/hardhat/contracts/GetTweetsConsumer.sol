@@ -121,10 +121,6 @@ contract GetTweetsConsumer is FunctionsClient, ConfirmedOwner {
     return (timestamp / dayInSeconds) * dayInSeconds;
   }
 
-  function isSameDay(uint256 timestamp1, uint256 timestamp2) public pure returns (bool) {
-    return _getStartOfDayTimestamp(timestamp1) == _getStartOfDayTimestamp(timestamp2);
-  }
-
   function getTweetIdsByDate(uint256 timestamp) public view returns (bytes memory) {
     return tweetIdsByDate[_getStartOfDayTimestamp(timestamp)];
   }

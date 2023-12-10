@@ -5,7 +5,7 @@ import { useContractRead } from "wagmi";
 
 export const useIsUserRegistered = (twitterHandle?: string | null) => {
   const { data: deployedContractData, isLoading: isLoadingContract } =
-    useDeployedContractInfo("ChainfluenceCampaignManager");
+    useDeployedContractInfo("TokenCampaignManager");
   const { data, isLoading: isLoadingRead } = useContractRead({
     abi: deployedContractData?.abi,
     address: deployedContractData?.address,

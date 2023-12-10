@@ -7,8 +7,6 @@ import { usePathname } from "next/navigation";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, Web3ConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import { useIsUserRegistered } from "~~/hooks/scaffold-eth/useIsUserRegistered";
-import { useAuth } from "~~/services/providers/AuthProvider";
 
 interface HeaderMenuLink {
   label: string;
@@ -58,9 +56,6 @@ export const HeaderMenuLinks = () => {
  */
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const { user } = useAuth();
-  const { data: isUserRegistered } = useIsUserRegistered(user?.twitter);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(
     burgerMenuRef,
