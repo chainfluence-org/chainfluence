@@ -15,7 +15,7 @@ export const useDeployedContractInfo = <TContractName extends ContractName>(cont
   ] as Contract<TContractName>;
   const [status, setStatus] = useState<ContractCodeStatus>(ContractCodeStatus.LOADING);
   const publicClient = usePublicClient({ chainId: scaffoldConfig.targetNetwork.id });
-  console.log("publicClient", publicClient);
+
   useEffect(() => {
     const checkContractDeployment = async () => {
       if (!deployedContract) {
