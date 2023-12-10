@@ -7,10 +7,13 @@ import { useAutoConnect } from "~~/hooks/scaffold-eth";
 const AuthContext = createContext({
   isLoading: false,
   isAuthenticated: false,
-  logout: () => {
+  logout: async () => {
     //
   },
   user: { twitter: null, twitter_profile_image_url: null },
+  fetchUser: async () => {
+    //
+  },
 });
 
 export function useAuth() {
@@ -115,6 +118,7 @@ export function AuthProvider({ children }: any) {
     isLoading,
     logout,
     user,
+    fetchUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
