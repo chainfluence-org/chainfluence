@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import TwitterConnectButton from "../TwitterConnectButton";
@@ -25,6 +25,14 @@ export default function CreateProject() {
     balance: "",
     decimals: "",
   } as any);
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (isSubmitted) {
+      redirect(`/projects/${tokenAddress}`);
+    }
+  }, [isSubmitted]);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -59,10 +67,8 @@ export default function CreateProject() {
 
     const data = await response.json();
 
-    console.log({ data });
-
     if (data.success) {
-      redirect(`/projects/${tokenAddress}`);
+      setIsSubmitted(true);
     }
   };
 
