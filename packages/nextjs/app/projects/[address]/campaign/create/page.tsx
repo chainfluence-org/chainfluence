@@ -13,5 +13,5 @@ export default async function Page({ params }: { params: { address: string } }) 
     return <div>Not authorized</div>;
   }
 
-  return <CreateCampaign />;
+  return <CreateCampaign name={project?.name || ""} />;
 }
