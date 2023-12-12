@@ -4,18 +4,17 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import TwitterConnectButton from "../TwitterConnectButton";
-import { createPublicClient, formatUnits, http, isAddress } from "viem";
-import { sepolia } from "wagmi";
+import { formatUnits, isAddress } from "viem";
+import { useNetwork, usePublicClient } from "wagmi";
 import { erc20Abi } from "~~/contracts/abi";
 import { useAuth } from "~~/services/providers/AuthProvider";
 
-const client = createPublicClient({
-  chain: sepolia,
-  transport: http(),
-});
-
 export default function CreateProject() {
   const { user } = useAuth();
+  const { chain } = useNetwork();
+  const client = usePublicClient({
+    chainId: chain?.id,
+  });
 
   const [tokenAddress, setTokenAddress] = useState("");
   const [tokenInfo, setTokenInfo] = useState({

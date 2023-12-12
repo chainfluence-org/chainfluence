@@ -1,13 +1,54 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
+import { useContractRead, useContractWrite, useNetwork } from "wagmi";
+import { getParsedError } from "~~/components/scaffold-eth";
+import { useDeployedContractInfo } from "~~/hooks/scaffold-eth/useDeployedContractInfo";
+import { getTargetNetwork, notification } from "~~/utils/scaffold-eth";
 
-export default function CreateCampaign({ name }: { name: string }) {
+export default function CreateCampaign({ name, address }: { name: string; address: string }) {
+  const { chain } = useNetwork();
+  const { data: tokenData } = useDeployedContractInfo("MutuoToken");
+  const { data: campaignManagerData } = useDeployedContractInfo("TokenCampaignManager");
+  const writeDisabled = !chain || chain?.id !== getTargetNetwork().id;
+  const { data: decimals, refetch } = useContractRead({
+    address: address,
+    functionName: "decimals",
+    abi: tokenData?.abi,
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
+  const { write } = useContractWrite({
+    address: address,
+    functionName: "transfer",
+    abi: tokenData?.abi,
+  });
   const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const form = event.target;
-    console.log({ form });
+    try {
+      event.preventDefault();
+      const form = event.target;
+      console.log({ form });
+      if (!campaignManagerData?.address) {
+        throw new Error("No campaign manager address");
+      }
+      if (!decimals) {
+        throw new Error("No decimals");
+      }
+      console.log({ decimals });
+      write({
+        args: [campaignManagerData?.address, BigInt(form.tokens.value * 10 ** decimals)],
+      });
+    } catch (e: any) {
+      const message = getParsedError(e);
+      notification.error(message);
+    }
   };
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, address]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -41,7 +82,7 @@ export default function CreateCampaign({ name }: { name: string }) {
                     type="date"
                     name="start-date"
                     id="start-date"
-                    className="block w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-gray-900"
                   />
                 </div>
               </div>
@@ -55,7 +96,7 @@ export default function CreateCampaign({ name }: { name: string }) {
                     type="date"
                     name="finish-date"
                     id="finish-date"
-                    className="block w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-gray-900"
                   />
                 </div>
               </div>
@@ -81,6 +122,7 @@ export default function CreateCampaign({ name }: { name: string }) {
             Cancel
           </Link>
           <button
+            disabled={writeDisabled}
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
