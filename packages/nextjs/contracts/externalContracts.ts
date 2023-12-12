@@ -1857,7 +1857,7 @@ const externalContracts = {
   },
   11155111: {
     TokenCampaignManager: {
-      address: "0xd085BE7F72CCF695b9a75463b137F3f658b1f7C6",
+      address: "0x64c10C43858BC1AE87f6fF8EFbFf2F84227d6540",
       abi: [
         {
           inputs: [
@@ -2494,7 +2494,7 @@ const externalContracts = {
       ],
     },
     GetEngagementConsumer: {
-      address: "0xE18992d867997f5Da9B6f3cb24F7373CfF9a711A",
+      address: "0x482482A12BD1BADc347BaEffF65e8af2C2743Fd3",
       abi: [
         {
           inputs: [
@@ -3023,7 +3023,7 @@ const externalContracts = {
       ],
     },
     GetTweetsConsumer: {
-      address: "0x654c72278EC2fba6016688957926F7A50158FeD9",
+      address: "0x7751f239dA52d8D9E6fD3e0659C6467992a7dBf8",
       abi: [
         {
           inputs: [
@@ -3419,7 +3419,7 @@ const externalContracts = {
       ],
     },
     MutuoToken: {
-      address: "0x87C5BAAB0C3FC127b4d0956C328ea7C0539aD5fC",
+      address: "0x65e9253301d4aC16f6d542623C9A16dBd1CC1044",
       abi: [
         {
           inputs: [],
