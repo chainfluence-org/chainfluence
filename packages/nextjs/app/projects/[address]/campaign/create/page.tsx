@@ -1,3 +1,5 @@
+"use server";
+
 import { getProjectByContractAddress } from "~~/app/actions";
 import { auth } from "~~/auth";
 import CreateCampaign from "~~/components/project/CreateCampaign";
