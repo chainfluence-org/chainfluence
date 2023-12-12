@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, Web3ConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import TwitterConnectButton from "./TwitterConnectButton";
 
 interface HeaderMenuLink {
   label: string;
